@@ -113,6 +113,9 @@ Take a quick look at the intuitive UI and various features of Clinikally:
 We appreciate contributions to the Clinikally project! For detailed instructions on how to contribute, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ---
+## Hosting
+<br>
+<img src="./ss1.png" alt="Home Screen" width="auto" height="150vh">
 
 ## License
 
