@@ -115,7 +115,7 @@ We appreciate contributions to the Clinikally project! For detailed instructions
 ---
 ## Hosting
 <br>
-<img src="./ss6.png" alt="Home Screen" width="auto" height="150vh">
+<img src="./ss6.png" alt="Home Screen" width="auto" height="300vh">
 
 ## License
 
