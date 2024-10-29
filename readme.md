@@ -1,46 +1,57 @@
-# Clinikally Project - Your Seamless Healthcare Companion
+# Clinikally Project
 
-Clinikally is a cutting-edge React Native application that revolutionizes the healthcare experience. With its intuitive user interface and a range of innovative features, Clinikally empowers users to effortlessly manage their healthcare needs.
+Clinikally is a React Native application that provides a streamlined healthcare experience. This README will guide you through setting up the project and showcasing the application's features.
 
 ## Getting Started
 
-To set up the Clinikally project, follow these simple steps:
+To get started, follow these steps:
 
-1. Clone the repository: `git clone https://github.com/Avenster/clinikally-project.git`
-2. Navigate to the project directory: `cd clinikally-project`
-3. Remove the existing `node_modules` folder and `package-lock.json` file: `rm -rf node_modules && rm package-lock.json`
-4. Install the dependencies: `npm install`
-5. Run the application on your desired platform: `npm run <your_platform>` (replace `<your_platform>` with either `ios` or `android`)
+1. Clone the repository:
+```
+git clone https://github.com/Avenster/clinikally-project.git
+```
 
-## Application Screenshots
+2. Navigate to the project directory:
+```
+cd clinikally-project
+```
 
-Clinikally offers a seamless and intuitive healthcare experience. Explore the key features through the following screenshots:
+3. Remove the existing `node_modules` folder and `package-lock.json` file:
+```
+rm -rf node_modules
+rm package-lock.json
+```
 
-<div style="display: flex; flex-wrap: wrap; justify-content: center;">
-  <div style="margin: 10px;">
-    <img src="./ss1.png" alt="Home Screen" width="200" height="400">
-    <p>Home Screen</p>
-  </div>
-  <div style="margin: 10px;">
-    <img src="./ss2.png" alt="Product List Screen" width="200" height="400">
-    <p>Product List Screen</p>
-  </div>
-  <div style="margin: 10px;">
-    <img src="./ss3.png" alt="Product Details Screen" width="200" height="400">
-    <p>Product Details Screen</p>
-  </div>
-  <div style="margin: 10px;">
-    <img src="./ss4.png" alt="Pincode Testing" width="200" height="400">
-    <p>Pincode Testing</p>
-  </div>
-</div>
+4. Install the dependencies:
+```
+npm install
+```
 
-Clinikally is a one-stop destination for all your healthcare needs, offering a wide range of skin care and wellness products. With its intuitive interface and seamless user experience, Clinikally aims to revolutionize the way you manage your healthcare journey.
+5. Run the application on your desired platform:
+```
+npm run <your_platform>
+```
 
-## Getting Timer and Date
+Replace `<your_platform>` with either `ios` or `android` depending on the platform you want to use.
 
-Clinikally's innovative features include a built-in timer and date functionality, empowering users to track their healthcare routines and manage their schedules effortlessly.
+## Application ScreenShots
 
-## Contributing
+Clinikally provides a range of features to streamline the healthcare experience. Here's a glimpse of the application's user interface:
+
+### Home Screen
+<img src="./ss1.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+
+
+### Product List Screen
+<img src="./ss2.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+
+### Product Details Screen
+<img src="./ss3.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+
+### Pincode testing
+<img src="./ss4.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+
+## Getting timer and Date
 
 We welcome contributions to the Clinikally project. If you'd like to get involved, please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
