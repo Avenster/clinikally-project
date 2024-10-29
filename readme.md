@@ -86,12 +86,12 @@ Follow these steps to set up and run Clinikally on your device:
 Take a quick look at the intuitive UI and various features of Clinikally:
 <p align="center">Home Screen</p>
 <div style="display: flex; flex-direction:row; justify-content:space-between; width:100%">
-<img src="./ss1.png" alt="Home Screen" width="48%" height="100vh">
-<img src="./ss2.png" alt="Product List Screen" width="48%" height="100vh">
+<img src="./ss1.png" alt="Home Screen" width="auto" height="100vh">
+<img src="./ss2.png" alt="Product List Screen" width="auto" height="100vh">
 </div>
 <div style="display: flex; flex-direction:row; justify-content:space-between; width:100%">
-<img src="./ss3.png" alt="Home Screen" width="48%" height="100vh">
-<img src="./ss4.png" alt="Product List Screen" width="48%" height="100vh">
+<img src="./ss3.png" alt="Home Screen" width="auto" height="100vh">
+<img src="./ss4.png" alt="Product List Screen" width="auto" height="100vh">
 </div>
 
 
