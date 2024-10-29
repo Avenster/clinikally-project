@@ -83,7 +83,7 @@ Get Clinikally up and running on your device with the following steps:
 
 Get a glimpse of Clinikally's intuitive UI and feature-rich experience:
 
-| Home Screen                 | Product List Screen           | Home Screen (Alternate)        | Product List Screen (Alternate)  |
+| Home Screen                 | Product List Screen           | Product Details                |Pincode testing                   |
 |-----------------------------|-------------------------------|--------------------------------|----------------------------------|
 | ![Home Screen](./ss1.png)   | ![Product List Screen](./ss2.png) | ![Home Screen (Alt)](./ss3.png) | ![Product List (Alt)](./ss4.png) |
 
