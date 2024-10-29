@@ -40,7 +40,7 @@ const ProductDetail = () => {
   const baseProduct = route.params?.product;
   const productInfo = productsData.find(p => p["Product ID"] === baseProduct["Product ID"]);
   const baseSalePrice = productInfo?.Price || baseProduct["Sale Price"] || 989;
-  const baseOriginalPrice = Math.round(baseSalePrice * 1.2);
+  const baseOriginalPrice = (baseSalePrice * 1.2).toFixed(2);;
   
   // State for dynamic prices
   const [currentPrices, setCurrentPrices] = useState({
