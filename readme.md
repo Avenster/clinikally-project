@@ -85,18 +85,7 @@ Follow these steps to set up and run Clinikally on your device:
 
 Take a quick look at the intuitive UI and various features of Clinikally:
 
-### Home Screen
-![Home Screen](./ss1.png)
-
-### Product List Screen
-![Product List Screen](./ss2.png)
-
-### Product Details Screen
-![Product Details Screen](./ss3.png)
-
-### Pincode Validation
-![Pincode Validation Screen](./ss4.png)
-
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;"> <div style="flex: 1 1 45%; max-width: 200px;"> <img src="./ss1.png" alt="Home Screen" width="100%" height="auto"> <p align="center">Home Screen</p> </div> <div style="flex: 1 1 45%; max-width: 200px;"> <img src="./ss2.png" alt="Product List Screen" width="100%" height="auto"> <p align="center">Product List Screen</p> </div> <div style="flex: 1 1 45%; max-width: 200px;"> <img src="./ss3.png" alt="Product Details Screen" width="100%" height="auto"> <p align="center">Product Details Screen</p> </div> <div style="flex: 1 1 45%; max-width: 200px;"> <img src="./ss4.png" alt="Pincode Validation Screen" width="100%" height="auto"> <p align="center">Pincode Validation Screen</p> </div> </div>
 ---
 
 ## Contributing
@@ -110,5 +99,3 @@ We appreciate contributions to the Clinikally project! For detailed instructions
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-Feel free to let me know if there’s anything more you’d like to add!
