@@ -16,6 +16,7 @@ import {
 import { useRoute } from "@react-navigation/native";
 import stockData from "../../assets/stock.json";
 import pincodeData from "../../assets/pincodes.json";
+import productsData from "../../assets/products.json"; 
 import Navbar from "./layout/Navbar";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -34,12 +35,38 @@ const ProductDetail = () => {
   
   const [isInStock, setIsInStock] = useState(true);
   const [showTimer, setShowTimer] = useState(false);
+
+
+  const baseProduct = route.params?.product;
+  const productInfo = productsData.find(p => p["Product ID"] === baseProduct["Product ID"]);
+  const baseSalePrice = productInfo?.Price || baseProduct["Sale Price"] || 989;
+  const baseOriginalPrice = Math.round(baseSalePrice * 1.25);
+  
+  // State for dynamic prices
+  const [currentPrices, setCurrentPrices] = useState({
+    salePrice: baseSalePrice,
+    originalPrice: baseOriginalPrice
+  });
+
+  // Initialize product with base data
   const [product] = useState({
-    ...route.params?.product,
-    "Original Price": 1099,
-    "Sale Price": 989,
+    ...baseProduct,
     benefits: ["Reduce Fineline", "Hydrates", "Lightens Skin"],
   });
+
+  // Update prices when pack size changes
+  const handlePackChange = (packSize) => {
+    const multiplier = packSize === "2 x 30 gm" ? 2 : 1;
+    setCurrentPrices({
+      salePrice: baseSalePrice * multiplier,
+      originalPrice: baseOriginalPrice * multiplier
+    });
+    setSelectedPack(packSize);
+  };
+
+
+
+
   const dismissKeyboard = () => {
     Keyboard.dismiss();
   };
@@ -145,71 +172,71 @@ const ProductDetail = () => {
   };
 
   return (
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingContainer}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-      >
-        <TouchableWithoutFeedback onPress={dismissKeyboard}>
-          <ScrollView 
-            style={styles.container}
-            keyboardShouldPersistTaps="handled"
-            showsVerticalScrollIndicator={false}
-          >
-        <View style={styles.breadcrumb}>
-          <Text style={styles.breadcrumbText}>Home / Skin Cream</Text>
-        </View>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.keyboardAvoidingContainer}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
+    >
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <ScrollView 
+          style={styles.container}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+      <View style={styles.breadcrumb}>
+        <Text style={styles.breadcrumbText}>Home / Skin Cream</Text>
+      </View>
 
-        <Text style={styles.productTitle}>{product?.["Product Name"]}</Text>
+      <Text style={styles.productTitle}>{product?.["Product Name"]}</Text>
 
-        <View style={styles.benefitsContainer}>
-          {product.benefits.map((benefit, index) => (
-            <View key={index} style={styles.benefitItem}>
-              <View style={styles.checkmarkBadge}>
-                <Icon
-                  name="check-circle"
-                  size={20}
-                  color="green"
-                  style={styles.checkmarkIcon}
-                />
-                <Text style={styles.benefitText}>{benefit}</Text>
-              </View>
+      <View style={styles.benefitsContainer}>
+        {product.benefits.map((benefit, index) => (
+          <View key={index} style={styles.benefitItem}>
+            <View style={styles.checkmarkBadge}>
+              <Icon
+                name="check-circle"
+                size={20}
+                color="green"
+                style={styles.checkmarkIcon}
+              />
+              <Text style={styles.benefitText}>{benefit}</Text>
             </View>
-          ))}
-        </View>
+          </View>
+        ))}
+      </View>
 
-        <ProductCarousel />
-         
-        <View style={styles.featuresContainer}>
-          <View style={styles.featureItem}>
-            <Image
-              source={require("../../assets/original.webp")}
-              style={styles.featureIcon}
-            />
-            <Text style={styles.featureText}>101% Original</Text>
-          </View>
-          <View style={styles.featureItem}>
-            <Image
-              source={require("../../assets/lowprice.png")}
-              style={styles.featureIcon1}
-            />
-            <Text style={styles.featureText}>Lowest Price</Text>
-          </View>
-          <View style={styles.featureItem1}>
-            <Image
-              source={require("../../assets/free.png")}
-              style={styles.featureIcon}
-            />
-            <Text style={styles.featureText}>Free Shipping</Text>
-          </View>
+      <ProductCarousel />
+       
+      <View style={styles.featuresContainer}>
+        <View style={styles.featureItem}>
+          <Image
+            source={require("../../assets/original.webp")}
+            style={styles.featureIcon}
+          />
+          <Text style={styles.featureText}>101% Original</Text>
         </View>
+        <View style={styles.featureItem}>
+          <Image
+            source={require("../../assets/lowprice.png")}
+            style={styles.featureIcon1}
+          />
+          <Text style={styles.featureText}>Lowest Price</Text>
+        </View>
+        <View style={styles.featureItem1}>
+          <Image
+            source={require("../../assets/free.png")}
+            style={styles.featureIcon}
+          />
+          <Text style={styles.featureText}>Free Shipping</Text>
+        </View>
+      </View>
 
-        <View style={styles.priceContainer}>
+      <View style={styles.priceContainer}>
           <View style={styles.priceRow}>
             <View style={styles.l}>
               <View style={styles.lBaacha}>
-                <Text style={styles.originalPrice}>₹{product["Original Price"]}</Text>
-                <Text style={styles.salePrice}>₹{product["Sale Price"]}</Text>
+                <Text style={styles.originalPrice}>₹{currentPrices.originalPrice}</Text>
+                <Text style={styles.salePrice}>₹{currentPrices.salePrice}</Text>
                 <View style={styles.saveTag}>
                   <Text style={styles.saveTagText}>SAVE 10%</Text>
                 </View>
@@ -220,18 +247,17 @@ const ProductDetail = () => {
             </View>
 
             <View style={styles.r}>
-  {!isInStock ? (
-    <View style={[styles.hurryButton, { backgroundColor: '#ff4444' }]}>
-      <Text style={styles.hurryButtonText}>Out of Stock</Text>
-    </View>
-  ) : (
-    <FlashingButton text="Hurry, Few Left!" />
-  )}
-</View>
+              {!isInStock ? (
+                <View style={[styles.hurryButton, { backgroundColor: '#ff4444' }]}>
+                  <Text style={styles.hurryButtonText}>Out of Stock</Text>
+                </View>
+              ) : (
+                <FlashingButton text="Hurry, Few Left!" />
+              )}
+            </View>
           </View>
         </View>
 
-        {/* Conditional rendering of sections based on stock status */}
         {isInStock && (
           <>
             <View style={styles.packContainer}>
@@ -241,7 +267,7 @@ const ProductDetail = () => {
               <View style={styles.packOptions}>
                 <TouchableOpacity
                   style={[styles.packButton, selectedPack === "30 gm" && styles.selectedPack]}
-                  onPress={() => setSelectedPack("30 gm")}
+                  onPress={() => handlePackChange("30 gm")}
                 >
                   <Text style={[styles.packButtonText, selectedPack === "30 gm" && styles.selectedPackText]}>
                     30 gm
@@ -249,7 +275,7 @@ const ProductDetail = () => {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.packButton, selectedPack === "2 x 30 gm" && styles.selectedPack]}
-                  onPress={() => setSelectedPack("2 x 30 gm")}
+                  onPress={() => handlePackChange("2 x 30 gm")}
                 >
                   <Text style={[styles.packButtonText, selectedPack === "2 x 30 gm" && styles.selectedPackText]}>
                     2 x 30 gm
@@ -258,112 +284,112 @@ const ProductDetail = () => {
               </View>
             </View>
 
-            <View style={styles.quantityContainer}>
-              <Text style={styles.quantityLabel}>Qty:</Text>
-              <View style={styles.quantitySelector}>
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={() => setQuantity(Math.max(1, quantity - 1))}
-                >
-                  <Text style={styles.quantityButtonText}>-</Text>
-                </TouchableOpacity>
-                <Text style={styles.quantityText}>{quantity}</Text>
-                <TouchableOpacity
-                  style={styles.quantityButton}
-                  onPress={() => setQuantity(quantity + 1)}
-                >
-                  <Text style={styles.quantityButtonText}>+</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.recentlyInCart}>
-                <Image
-                  source={require("../../assets/graph.png")}
-                  style={styles.featureIcon}
-                />
-                <Text style={styles.recentlyInCartText}>Recently in 1575 carts</Text>
-              </View>
+          <View style={styles.quantityContainer}>
+            <Text style={styles.quantityLabel}>Qty:</Text>
+            <View style={styles.quantitySelector}>
+              <TouchableOpacity
+                style={styles.quantityButton}
+                onPress={() => setQuantity(Math.max(1, quantity - 1))}
+              >
+                <Text style={styles.quantityButtonText}>-</Text>
+              </TouchableOpacity>
+              <Text style={styles.quantityText}>{quantity}</Text>
+              <TouchableOpacity
+                style={styles.quantityButton}
+                onPress={() => setQuantity(quantity + 1)}
+              >
+                <Text style={styles.quantityButtonText}>+</Text>
+              </TouchableOpacity>
             </View>
+            <View style={styles.recentlyInCart}>
+              <Image
+                source={require("../../assets/graph.png")}
+                style={styles.featureIcon}
+              />
+              <Text style={styles.recentlyInCartText}>Recently in 1575 carts</Text>
+            </View>
+          </View>
 
-            <View style={styles.offers}>
-              <View style={styles.offersContainer}>
-                <Text style={styles.offersTitle}>Available offers</Text>
-                <View style={styles.offerItem}>
-                  <View style={styles.offerIconContainer}>
-                    <Image
-                      source={require("../../assets/checkstar.png")}
-                      style={styles.OfferIcon}
-                    />
-                  </View>
-                  <View style={styles.offerDetails}>
-                    <Text style={styles.offerText}>₹10 off on prepaid orders</Text>
-                    <Text style={styles.offerSubtext}>Auto applied at checkout.</Text>
-                  </View>
+          <View style={styles.offers}>
+            <View style={styles.offersContainer}>
+              <Text style={styles.offersTitle}>Available offers</Text>
+              <View style={styles.offerItem}>
+                <View style={styles.offerIconContainer}>
+                  <Image
+                    source={require("../../assets/checkstar.png")}
+                    style={styles.OfferIcon}
+                  />
+                </View>
+                <View style={styles.offerDetails}>
+                  <Text style={styles.offerText}>₹10 off on prepaid orders</Text>
+                  <Text style={styles.offerSubtext}>Auto applied at checkout.</Text>
                 </View>
               </View>
             </View>
-
-            
-
-            {/* <CountdownTimer provider={deliveryInfo.provider}/> */}
-            
-
-            <View style={styles.deliveryContainer}>
-        <Text style={styles.deliveryText}>Select Delivery Location</Text>
-        <View style={styles.pincodeInputContainer}>
-          <TextInput
-            style={styles.pincodeInput}
-            placeholder="Enter Pincode"
-            value={pincode}
-            onChangeText={setPincode}
-            keyboardType="numeric"
-            maxLength={6}
-          />
-          <TouchableOpacity
-            style={[styles.checkButton, pincode.length !== 6 && styles.disabledButton]}
-            onPress={checkDelivery}
-            disabled={pincode.length !== 6}
-          >
-            <Text style={styles.checkButtonText}>Check</Text>
-          </TouchableOpacity>
-        </View>
-        {showTimer && deliveryInfo?.available && (
-  <CountdownTimer 
-    provider={deliveryInfo.provider} 
-    tat={parseInt(deliveryInfo.tat)}  // Pass TAT directly for all providers
-  />
-)}
-
-        {loading && (
-          <Text style={styles.loadingText}>Checking delivery information...</Text>
-        )}
-
-        {/* {deliveryInfo && (
-          <View style={styles.deliveryInfo}>
-            <Text style={[styles.deliveryMessage, !deliveryInfo.available && styles.errorMessage]}>
-              {deliveryInfo.message}
-            </Text>
-            {deliveryInfo.available && (
-              <Text style={styles.providerInfo}>Delivery by: {deliveryInfo.provider}</Text>
-            )}
           </View>
-        )} */}
 
-        
+          
+
+          {/* <CountdownTimer provider={deliveryInfo.provider}/> */}
+          
+
+          <View style={styles.deliveryContainer}>
+      <Text style={styles.deliveryText}>Select Delivery Location</Text>
+      <View style={styles.pincodeInputContainer}>
+        <TextInput
+          style={styles.pincodeInput}
+          placeholder="Enter Pincode"
+          value={pincode}
+          onChangeText={setPincode}
+          keyboardType="numeric"
+          maxLength={6}
+        />
+        <TouchableOpacity
+          style={[styles.checkButton, pincode.length !== 6 && styles.disabledButton]}
+          onPress={checkDelivery}
+          disabled={pincode.length !== 6}
+        >
+          <Text style={styles.checkButtonText}>Check</Text>
+        </TouchableOpacity>
       </View>
-          </>
-        
-        )}
-       <View style={styles.keyboardSpacing} />
-          </ScrollView>
-        </TouchableWithoutFeedback>
-        {isInStock && (
-  <Cart deliveryInfo={deliveryInfo} />
+      {showTimer && deliveryInfo?.available && (
+<CountdownTimer 
+  provider={deliveryInfo.provider} 
+  tat={parseInt(deliveryInfo.tat)}  // Pass TAT directly for all providers
+/>
 )}
-      </KeyboardAvoidingView>
+
+      {loading && (
+        <Text style={styles.loadingText}>Checking delivery information...</Text>
+      )}
+
+      {/* {deliveryInfo && (
+        <View style={styles.deliveryInfo}>
+          <Text style={[styles.deliveryMessage, !deliveryInfo.available && styles.errorMessage]}>
+            {deliveryInfo.message}
+          </Text>
+          {deliveryInfo.available && (
+            <Text style={styles.providerInfo}>Delivery by: {deliveryInfo.provider}</Text>
+          )}
+        </View>
+      )} */}
 
       
+    </View>
+        </>
       
-  );
+      )}
+     <View style={styles.keyboardSpacing} />
+        </ScrollView>
+      </TouchableWithoutFeedback>
+      {isInStock && (
+<Cart deliveryInfo={deliveryInfo} />
+)}
+    </KeyboardAvoidingView>
+
+    
+    
+);
 };
 
 const styles = StyleSheet.create({
