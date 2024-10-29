@@ -5,13 +5,18 @@ import {
     StyleSheet,
     TouchableOpacity,
 } from "react-native";
-import React from 'react';
+import React, { useEffect } from 'react';  // Added useEffect import
 import { MaterialIcons } from "@expo/vector-icons";
 import Feather from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 
 const Bottom = ({ currentRoute }) => {
   const navigation = useNavigation();
+
+  // Add useEffect to navigate to Home on initial render
+  useEffect(() => {
+    navigation.navigate('Home');
+  }, []); // Empty dependency array means this runs once on mount
 
   // Debug log to verify current route
   console.log('Current route in Bottom:', currentRoute);
