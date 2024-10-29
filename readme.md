@@ -105,7 +105,6 @@ Take a quick look at the intuitive UI and various features of Clinikally:
     <p align="center">Pincode Validation Screen</p>
   </div>
 </div>
-
 ## Contributing
 
 We appreciate contributions to the Clinikally project! For detailed instructions on how to contribute, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file.
