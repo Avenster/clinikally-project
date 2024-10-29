@@ -41,16 +41,24 @@ Product Catalogue: Display a list of 5,000 products with real-time stock availab
 Pincode Input and Validation: Allow users to input a valid pincode and associate it with the appropriate logistics provider.
 Delivery Date Estimation: Estimate the delivery date based on the selected product, pincode, and the associated logistics provider:
 
-### Provider A: Same-day delivery for orders placed before 5 PM, provided the product is in stock.
-### Provider B: Same-day delivery for orders placed before 9 AM; next-day delivery for orders placed after.
-### General Partners: Delivery within 2 to 5 days depending on the pincode (metro, non-metro, or tier 2-3 cities).
+### Provider A: 
+Same-day delivery for orders placed before 5 PM, provided the product is in stock.
+### Provider B: 
+Same-day delivery for orders placed before 9 AM; next-day delivery for orders placed after.
+### General Partners: 
+Delivery within 2 to 5 days depending on the pincode (metro, non-metro, or tier 2-3 cities).
 
 
-### Countdown Timer: Implement a visible countdown timer for Provider A and Provider B orders to indicate the remaining time for qualifying for same-day delivery.
-### Date and Time Awareness: Ensure the application accurately considers the current date and time to calculate delivery estimates.
-### Responsive and User-Friendly UI: Provide a clean and intuitive user interface that adapts to different screen sizes and devices.
-### Error Handling: Handle cases like invalid pincodes, products out of stock, and missing cutoff times for same-day delivery.
-### Modular and Commented Code: Write clean, modular code with comments as needed for better maintainability and scalability.
+### Countdown Timer: 
+Implement a visible countdown timer for Provider A and Provider B orders to indicate the remaining time for qualifying for same-day delivery.
+### 
+Date and Time Awareness: Ensure the application accurately considers the current date and time to calculate delivery estimates.
+### Responsive and User-Friendly UI: 
+Provide a clean and intuitive user interface that adapts to different screen sizes and devices.
+### Error Handling: 
+Handle cases like invalid pincodes, products out of stock, and missing cutoff times for same-day delivery.
+### Modular and Commented Code: 
+Write clean, modular code with comments as needed for better maintainability and scalability.
 
 
 ## Application ScreenShots
