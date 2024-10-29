@@ -34,24 +34,26 @@ npm run <your_platform>
 
 Replace `<your_platform>` with either `ios` or `android` depending on the platform you want to use.
 
-## Application ScreenShots
+## Application Features
 
 Clinikally provides a range of features to streamline the healthcare experience. Here's a glimpse of the application's user interface:
 
-### Home Screen
-<img src="./ss1.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+### Appointment Booking
+![Appointment Booking Screen](./ss1.png)
 
+### Doctor Consultation
+![Doctor Consultation Screen](./ss2.png)
 
-### Product List Screen
-<img src="./ss2.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+### Prescription Management
+![Prescription Management Screen](./ss3.png)
 
-### Product Details Screen
-<img src="./ss3.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+### Symptom Checker
+![Symptom Checker Screen](./ss4.png)
 
-### Pincode testing
-<img src="./ss4.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
-
-## Getting timer and Date
+## Contributing
 
 We welcome contributions to the Clinikally project. If you'd like to get involved, please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
+## License
+
+This project is licensed under the [MIT License](LICENSE).
