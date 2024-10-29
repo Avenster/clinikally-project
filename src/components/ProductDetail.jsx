@@ -36,6 +36,7 @@ const ProductDetail = () => {
   const [isInStock, setIsInStock] = useState(true);
   const [showTimer, setShowTimer] = useState(false);
   const [isValidPincode, setIsValidPincode] = useState(true);
+  const [pincodeError, setPincodeError] = useState(""); // New state for error message
 
   const baseProduct = route.params?.product;
   const productInfo = productsData.find(p => p["Product ID"] === baseProduct["Product ID"]);
@@ -64,6 +65,10 @@ const ProductDetail = () => {
     setSelectedPack(packSize);
   };
 
+  const validatePincode = (code) => {
+    // Basic validation for 6-digit numeric pincode
+    return /^[0-9]{6}$/.test(code);
+  };
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -82,8 +87,16 @@ const ProductDetail = () => {
 
   const checkDelivery = () => {
     setLoading(true);
-    setShowTimer(false); // Reset timer visibility
-    setIsValidPincode(true); // Reset pincode validity
+    setShowTimer(false);
+    setPincodeError(""); // Reset error message
+    
+    // First validate pincode format
+    if (!validatePincode(pincode)) {
+      setIsValidPincode(false);
+      setPincodeError("Please enter a valid 6-digit pincode");
+      setLoading(false);
+      return;
+    }
 
     const stockInfo = stockData.find(
       (item) => item["Product ID"] === product["Product ID"]
@@ -102,15 +115,20 @@ const ProductDetail = () => {
     // Find pincode information
     const pincodeInfo = pincodeData.find((item) => item.Pincode === pincode);
     if (!pincodeInfo) {
+      setIsValidPincode(false);
+      setPincodeError("Invalid pincode. We currently don't deliver to this location");
       setDeliveryInfo({
         available: false,
         message: "Delivery not available at this location",
         isOutOfStock: false
       });
-      setIsValidPincode(false);
       setLoading(false);
       return;
     }
+
+    // Reset validation state if pincode is valid
+    setIsValidPincode(true);
+    setPincodeError("");
 
     const currentTime = new Date();
     const currentHour = currentTime.getHours();
@@ -167,9 +185,10 @@ const ProductDetail = () => {
       deliveryDate,
     });
 
-    setShowTimer(true); // Show timer when delivery info is available
+    setShowTimer(true);
     setLoading(false);
   };
+
 
   return (
       <KeyboardAvoidingView
@@ -328,40 +347,53 @@ const ProductDetail = () => {
                 </View>
               </View>
             </View>
+            <View style={styles.deliveryContainer}>
+      <Text style={styles.deliveryText}>Select Delivery Location</Text>
+      <View style={styles.pincodeInputContainer}>
+        <TextInput
+          style={[
+            styles.pincodeInput,
+            !isValidPincode && styles.invalidPincode
+          ]}
+          placeholder="Enter Pincode"
+          value={pincode}
+          onChangeText={(text) => {
+            setPincode(text);
+            setIsValidPincode(true); // Reset validation on new input
+            setPincodeError(""); // Clear error message on new input
+          }}
+          keyboardType="numeric"
+          maxLength={6}
+        />
+        <TouchableOpacity
+          style={[styles.checkButton, pincode.length !== 6 && styles.disabledButton]}
+          onPress={checkDelivery}
+          disabled={pincode.length !== 6}
+        >
+          <Text style={styles.checkButtonText}>Check</Text>
+        </TouchableOpacity>
+      </View>
+      
+      {pincodeError ? (
+        <Text style={styles.errorMessage}>{pincodeError}</Text>
+      ) : null}
+
+      {loading && (
+        <Text style={styles.loadingText}>Checking delivery information...</Text>
+      )}
+
+      {showTimer && deliveryInfo?.available && (
+        <CountdownTimer 
+          provider={deliveryInfo.provider} 
+          tat={parseInt(deliveryInfo.tat)}
+        />
+      )}
 
             
 
             {/* <CountdownTimer provider={deliveryInfo.provider}/> */}
             
 
-            <View style={styles.deliveryContainer}>
-        <Text style={styles.deliveryText}>Select Delivery Location</Text>
-        <View style={styles.pincodeInputContainer}>
-          <TextInput
-            style={[styles.pincodeInput, !isValidPincode && styles.invalidPincode]}
-            placeholder="Enter Pincode"
-            value={pincode}
-            onChangeText={setPincode}
-            keyboardType="numeric"
-            maxLength={6}
-          />
-          <TouchableOpacity
-            style={[styles.checkButton, pincode.length !== 6 && styles.disabledButton]}
-            onPress={checkDelivery}
-            disabled={pincode.length !== 6}
-          >
-            <Text style={styles.checkButtonText}>Check</Text>
-          </TouchableOpacity>
-        </View>
-        {!isValidPincode && (
-          <Text style={styles.errorMessage}>Please enter a valid pincode.</Text>
-        )}
-        {showTimer && deliveryInfo?.available && (
-  <CountdownTimer 
-    provider={deliveryInfo.provider} 
-    tat={parseInt(deliveryInfo.tat)}  // Pass TAT directly for all providers
-  />
-)}
 
         {loading && (
           <Text style={styles.loadingText}>Checking delivery information...</Text>
@@ -848,6 +880,20 @@ const styles = StyleSheet.create({
   deliveryContainer: {
     padding: 16,
     paddingBottom: Platform.OS === 'ios' ? 32 : 16, // Extra padding for iOS
+  },
+  invalidPincode: {
+    borderColor: '#f44336',
+    borderWidth: 1,
+  },
+  errorMessage: {
+    color: '#f44336',
+    fontSize: 12,
+    marginTop: 4,
+    marginBottom: 8,
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
+    opacity: 0.7,
   },
 });
 

@@ -1,164 +1,168 @@
-import React, { useEffect, useState, useRef, useMemo, memo } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
-import products from '../../assets/products.json';
-import stockData from '../../assets/stock.json';
+import React, { useEffect, useState, useCallback, useMemo } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import products from "../../assets/products.json";
+import stockData from "../../assets/stock.json";
 import { useNavigation } from "@react-navigation/native";
-import { useCart } from './layout/CartContext';
+import { useCart } from "./layout/CartContext";
+import Stock from "./Stock";
 
-const ProductItem = memo(({ product, onAddToCart, onRemoveFromCart, isInCart }) => {
-  const handleCartAction = () => {
-    if (isInCart) {
-      onRemoveFromCart(product['Product ID']);
-    } else {
-      onAddToCart(product);
-    }
-  };
-
-  return (
-    <TouchableOpacity
-      style={styles.productCard}
-      onPress={() => navigation.navigate('ProductDetail', { product })}
-    >
-      <View style={styles.imageContainer}>
-        <Image
-          source={require('../../assets/p5.png')}
-          defaultSource={require('../../assets/p5.png')}
-          style={styles.productImage}
-        />
-        <View style={styles.saveTag}>
-          <Text style={styles.saveText}>SAVE 15%</Text>
-        </View>
-      </View>
-      <View style={styles.productInfo}>
-        <Text style={styles.productName} numberOfLines={2}>
-          {product['Product Name']}
-        </Text>
-        <View style={styles.priceContainer}>
-          <Text style={styles.price}>₹{product.Price}</Text>
-          <Text style={styles.originalPrice}>
-            ₹{(parseFloat(product.Price) * 1.2).toFixed(2)}
-          </Text>
-        </View>
-        {product.isInStock ? (
-          <TouchableOpacity
-            style={[
-              styles.addToCartButton,
-              isInCart && styles.removeFromCartButton
-            ]}
-            onPress={handleCartAction}
-          >
-            <Text style={[
-              styles.addToCartText,
-              isInCart && styles.removeFromCartText
-            ]}>
-              {isInCart ? 'Remove from Cart' : 'Add to Cart'}
-            </Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={[styles.addToCartButton, styles.outOfStockButton]}
-            disabled={true}
-          >
-            <Text style={[styles.addToCartText, styles.outOfStockText]}>
-              Out of Stock
-            </Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </TouchableOpacity>
-  );
-});
+const ITEMS_PER_PAGE = 10;
+const LOADING_THRESHOLD = 0.5;
 
 const ProductList = () => {
   const { addToCart, removeFromCart, isInCart } = useCart();
-  const [loading, setLoading] = useState(true);
-  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const ITEMS_PER_PAGE = 10;
-  const [totalAvailableProducts, setTotalAvailableProducts] = useState(0);
-  const [totalProducts, setTotalProducts] = useState(products.length);
   const navigation = useNavigation();
-  const flatListRef = useRef(null);
 
-  useEffect(() => {
-    calculateTotalAvailableProducts();
-    loadMoreProducts();
-    setLoading(false);
+  // Pre-process products with stock information
+  const processedProducts = useMemo(() => {
+    return products.map((product) => {
+      const stockInfo = stockData.find(
+        (item) => item["Product ID"] === product["Product ID"]
+      );
+      return {
+        ...product,
+        isInStock: stockInfo?.["Stock Available"] !== "False",
+        uniqueId: `${product["Product ID"]}`,
+      };
+    });
   }, []);
 
-  const calculateTotalAvailableProducts = () => {
-    let availableProducts = 0;
-    products.forEach((product) => {
-      const stockInfo = stockData.find(item => item["Product ID"] === product["Product ID"]);
-      const isInStock = stockInfo?.["Stock Available"] !== "False";
-      if (isInStock) {
-        availableProducts++;
-      }
-    });
-    setTotalAvailableProducts(availableProducts);
-    setTotalProducts(products.length);
-  };
+  // Calculate if there are more products to load
+  const hasMore = useMemo(() => {
+    return currentPage * ITEMS_PER_PAGE < processedProducts.length;
+  }, [currentPage, processedProducts.length]);
 
-  const loadMoreProducts = () => {
+  // Load more products function
+  const loadMoreProducts = useCallback(() => {
     if (!hasMore || loading) return;
 
     setLoading(true);
     
+    // Calculate the next batch of products
     const startIndex = currentPage * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
-    const newProducts = products.slice(startIndex, endIndex).map((product, index) => {
-      const stockInfo = stockData.find(item => item["Product ID"] === product["Product ID"]);
-      const isInStock = stockInfo?.["Stock Available"] !== "False";
-      if (isInStock) {
-        setTotalAvailableProducts(prev => prev + 1);
-      }
+    const newProducts = processedProducts.slice(startIndex, endIndex);
 
-      return {
-        ...product,
-        isInStock,
-        uniqueId: `${startIndex + index}-${product['Product ID']}`
-      };
-    });
-
-    if (endIndex >= products.length) {
-      setHasMore(false);
-    }
-
+    // Delay to show loading state
     setTimeout(() => {
       setDisplayedProducts(prev => [...prev, ...newProducts]);
       setCurrentPage(prev => prev + 1);
       setLoading(false);
+      
+      if (initialLoading) {
+        setInitialLoading(false);
+      }
     }, 500);
-  };
+  }, [currentPage, hasMore, loading, processedProducts, initialLoading]);
 
-  const handleEndReached = () => {
+  // Initial load
+  useEffect(() => {
     loadMoreProducts();
-  };
+  }, []);
 
-  const renderHeader = useMemo(() => {
-    const availabilityPercentage = (totalAvailableProducts / totalProducts) * 100;
+  const renderItem = useCallback(({ item }) => {
+    const productInCart = isInCart(item["Product ID"]);
+
+    const handleCartAction = () => {
+      if (productInCart) {
+        removeFromCart(item["Product ID"]);
+      } else {
+        addToCart(item);
+      }
+    };
 
     return (
-      <View style={styles.headerContainer}>
-        <View style={styles.img}>
+      <TouchableOpacity
+        style={styles.productCard}
+        onPress={() => navigation.navigate("ProductDetail", { product: item })}
+      >
+        <View style={styles.imageContainer}>
           <Image
-            source={require('../../assets/p1.png')}
-            defaultSource={require('../../assets/p1.png')}
-            style={styles.img2}
+            source={require("../../assets/p5.png")}
+            defaultSource={require("../../assets/p5.png")}
+            style={styles.productImage}
           />
+          <View style={styles.saveTag}>
+            <Text style={styles.saveText}>SAVE 10%</Text>
+          </View>
         </View>
-        <View style={[styles.headerSection, styles.headerSpacing]}>
-          <Text style={styles.headerTitle}>
-            Showing {displayedProducts.length} of {totalProducts} items  (<Text style={styles.boldText}>{availabilityPercentage.toFixed(2)}%available</Text> )
+
+        <View style={styles.productInfo}>
+          <Text style={styles.productName} numberOfLines={2}>
+            {item["Product Name"]}
           </Text>
+          <View style={styles.priceContainer}>
+            <Text style={styles.price}>₹{item.Price}</Text>
+            <Text style={styles.originalPrice}>
+              ₹{(parseFloat(item.Price) * 1.2).toFixed(2)}
+            </Text>
+          </View>
+          {item.isInStock ? (
+            <TouchableOpacity
+              style={[
+                styles.addToCartButton,
+                productInCart && styles.removeFromCartButton,
+              ]}
+              onPress={handleCartAction}
+            >
+              <Text
+                style={[
+                  styles.addToCartText,
+                  productInCart && styles.removeFromCartText,
+                ]}
+              >
+                {productInCart ? "Remove from Cart" : "Add to Cart"}
+              </Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={[styles.addToCartButton, styles.outOfStockButton]}
+              disabled={true}
+            >
+              <Text style={[styles.addToCartText, styles.outOfStockText]}>
+                Out of Stock
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  }, [isInCart, removeFromCart, addToCart, navigation]);
+
+  const ListHeader = useCallback(() => (
+    <View style={styles.headerContainer}>
+      <View style={styles.img}>
+        <Image
+          source={require("../../assets/p1.png")}
+          defaultSource={require("../../assets/p1.png")}
+          style={styles.img2}
+        />
+      </View>
+      <View style={[styles.headerSection, styles.headerSpacing]}>
+        <View style={styles.headerTitleContainer}>
+          <Text style={styles.headerTitle}>
+            Showing {displayedProducts.length} of {products.length} items
+          </Text>
+          <Stock stockData={stockData} />
         </View>
       </View>
-    );
-  }, [displayedProducts.length, totalProducts, totalAvailableProducts]);
+    </View>
+  ), [displayedProducts.length]);
 
-  const renderFooter = () => {
-    if (!loading && !hasMore) {
+  const ListFooter = useCallback(() => {
+    if (!hasMore && displayedProducts.length > 0) {
       return (
         <View style={styles.endMessageContainer}>
           <Text style={styles.endMessage}>No more products to load</Text>
@@ -166,7 +170,7 @@ const ProductList = () => {
       );
     }
 
-    if (loading) {
+    if (loading && !initialLoading) {
       return (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#9747FF" />
@@ -175,9 +179,9 @@ const ProductList = () => {
     }
 
     return null;
-  };
+  }, [loading, hasMore, initialLoading, displayedProducts.length]);
 
-  if (loading && displayedProducts.length === 0) {
+  if (initialLoading) {
     return (
       <View style={styles.initialLoaderContainer}>
         <ActivityIndicator size="large" color="#9747FF" />
@@ -185,33 +189,30 @@ const ProductList = () => {
     );
   }
 
+  const handleEndReached = () => {
+    if (!loading && hasMore) {
+      loadMoreProducts();
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
-        ref={flatListRef}
         data={displayedProducts}
-        renderItem={({ item }) => (
-          <ProductItem
-            product={item}
-            onAddToCart={addToCart}
-            onRemoveFromCart={removeFromCart}
-            isInCart={isInCart(item['Product ID'])}
-          />
-        )}
-        keyExtractor={item => item.uniqueId}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.uniqueId}
         numColumns={2}
         contentContainerStyle={styles.productsGrid}
         onEndReached={handleEndReached}
-        onEndReachedThreshold={0.5}
-        ListHeaderComponent={renderHeader}
-        ListFooterComponent={renderFooter}
+        onEndReachedThreshold={LOADING_THRESHOLD}
+        ListHeaderComponent={ListHeader}
+        ListFooterComponent={ListFooter}
         ListFooterComponentStyle={styles.footerComponentStyle}
         showsVerticalScrollIndicator={false}
-        initialNumToRender={10} // Render 10 items initially
-        maxToRenderPerBatch={5} // Render 5 items per batch
-        updateCellsBatchingPeriod={50} // Update cells every 50ms
-        windowSize={11} // Render 11 viewable items
-        removeClippedSubviews={true} // Improves scroll performance
+        windowSize={5}
+        maxToRenderPerBatch={5}
+        updateCellsBatchingPeriod={50}
+        removeClippedSubviews={true}
       />
     </View>
   );
@@ -220,155 +221,157 @@ const ProductList = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   headerContainer: {
-    width: '100%',
+    width: "100%",
     height: 140,
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignContent: 'flex-start',
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignContent: "flex-start",
     padding: 0,
     margin: 0,
   },
-  headerSection: {
-    borderBottomColor: '#eee',
-    width: '100%',
-    height: 20,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+  headerTitleContainer: {
+    height: "100%",
+    width: "100%",
+    alignItems: "flex-end",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 5,
   },
-  headerSpacing: {
-    paddingHorizontal: 8,
+  headerSection: {
+    borderBottomColor: "#eee",
+    width: "100%",
+    height: 20,
+    alignItems: "flex-end",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   headerTitle: {
     fontSize: 14,
-    color: '#666',
+    color: "#666",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "flex-end",
   },
   productsGrid: {
     paddingBottom: 30,
     padding: 0,
     margin: 0,
   },
-  img: {
-    width: '100%',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-    height: 120,
-    overflow: 'hidden',
-  },
-  img2: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'contain',
-  },
   productCard: {
     flex: 1,
     margin: 8,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     shadowRadius: 4,
     borderWidth: 1,
-    borderColor: '#eee',
+    borderColor: "#eee",
   },
   imageContainer: {
-    position: 'relative',
+    position: "relative",
   },
   productImage: {
-    width: '100%',
+    width: "100%",
     height: 180,
     borderTopLeftRadius: 8,
     borderTopRightRadius: 8,
   },
   saveTag: {
-    position: 'absolute',
+    position: "absolute",
     top: 8,
     right: 8,
-    backgroundColor: '#9747FF',
+    backgroundColor: "#9747FF",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 4,
   },
   saveText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   productInfo: {
     padding: 12,
   },
   productName: {
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: "500",
     marginBottom: 4,
     height: 40,
   },
   priceContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 8,
   },
   price: {
     fontSize: 14,
-    fontWeight: 'bold',
-    color: 'green',
+    fontWeight: "bold",
+    color: "green",
     marginRight: 8,
   },
   originalPrice: {
     fontSize: 12,
-    color: '#666',
-    textDecorationLine: 'line-through',
-  },
-  removeFromCartButton: {
-    backgroundColor: '#9747FF',
-    borderColor: '#9747FF',
-  },
-  removeFromCartText: {
-    color: '#FFF',
+    color: "#666",
+    textDecorationLine: "line-through",
   },
   addToCartButton: {
-    backgroundColor: '#FFF',
+    backgroundColor: "#FFF",
     borderWidth: 1,
-    borderColor: '#9747FF',
+    borderColor: "#9747FF",
     padding: 8,
     borderRadius: 20,
-    alignItems: 'center',
+    alignItems: "center",
+  },
+  removeFromCartButton: {
+    backgroundColor: "#9747FF",
+    borderColor: "#9747FF",
   },
   outOfStockButton: {
-    backgroundColor: '#ff4444',
-    borderColor: '#ff4444',
+    backgroundColor: "white",
+    borderColor: "#CBA3FF",
   },
   addToCartText: {
-    color: '#9747FF',
+    color: "#9747FF",
     fontSize: 12,
-    fontWeight: '500',
+    fontWeight: "500",
+  },
+  removeFromCartText: {
+    color: "#FFF",
   },
   outOfStockText: {
-    color: '#FFF',
+    color: "#CBA3FF",
+  },
+  loaderContainer: {
+    paddingVertical: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: 80,
   },
   initialLoaderContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#fff',
-  },
-  loaderContainer: {
-    paddingVertical: 20,
-    backgroundColor: '#fff',
-  },
-  footerComponentStyle: {
-    marginVertical: 10,
-    marginBottom: 10,
   },
   endMessageContainer: {
-    paddingVertical: 10,
+    paddingVertical: 20,
     alignItems: 'center',
-    backgroundColor: '#fff',
   },
   endMessage: {
-    color: '#666',
+    color: "#666",
     fontSize: 14,
-  },boldText: {
-    fontWeight: 'bold',
+  },
+  img: {
+    width: "100%",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
+    height: 120,
+    overflow: "hidden",
+  },
+  img2: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "contain",
   },
 });
 
