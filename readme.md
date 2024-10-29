@@ -39,21 +39,18 @@ Replace `<your_platform>` with either `ios` or `android` depending on the platfo
 Clinikally provides a range of features to streamline the healthcare experience. Here's a glimpse of the application's user interface:
 
 ### Home Screen
-![Appointment Booking Screen](./frontend/appointment-booking.png)
+![Appointment Booking Screen](./frontend/ss1.png)
 
 ### Product List Screen
-![Doctor Consultation Screen](./frontend/doctor-consultation.png)
+![Doctor Consultation Screen](./frontend/ss2.png)
 
 ### Product Details Screen
-![Prescription Management Screen](./frontend/prescription-management.png)
+![Prescription Management Screen](./frontend/ss3.png)
 
 ### Pincode testing
-![Symptom Checker Screen](./frontend/symptom-checker.png)
+![Symptom Checker Screen](./frontend/ss4.png)
 
 ## Getting timer and Date
 
 We welcome contributions to the Clinikally project. If you'd like to get involved, please follow the guidelines outlined in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
-## License
-
-This project is licensed under the [MIT License](LICENSE).
