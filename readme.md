@@ -85,8 +85,26 @@ Follow these steps to set up and run Clinikally on your device:
 
 Take a quick look at the intuitive UI and various features of Clinikally:
 
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;"> <div style="flex: 0 0 40%; max-width: 40%;"> <img src="./ss1.png" alt="Home Screen" width="40%" height="auto"> <p align="center">Home Screen</p> </div> <div style="flex: 0 0 40%; max-width: 40%;"> <img src="./ss2.png" alt="Product List Screen" width="40%" height="auto"> <p align="center">Product List Screen</p> </div> <div style="flex: 0 0 40%; max-width: 40%;"> <img src="./ss3.png" alt="Product Details Screen" width="40%" height="auto"> <p align="center">Product Details Screen</p> </div> <div style="flex: 0 0 40%; max-width: 40%;"> <img src="./ss4.png" alt="Pincode Validation Screen" width="40%" height="auto"> <p align="center">Pincode Validation Screen</p> </div> </div>
----
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+  <div style="flex: 0 0 48%; max-width: 48%;">
+    <img src="./ss1.png" alt="Home Screen" width="100%" height="auto">
+    <p align="center">Home Screen</p>
+  </div>
+  <div style="flex: 0 0 48%; max-width: 48%;">
+    <img src="./ss2.png" alt="Product List Screen" width="100%" height="auto">
+    <p align="center">Product List Screen</p>
+  </div>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+  <div style="flex: 0 0 48%; max-width: 48%;">
+    <img src="./ss3.png" alt="Product Details Screen" width="100%" height="auto">
+    <p align="center">Product Details Screen</p>
+  </div>
+  <div style="flex: 0 0 48%; max-width: 48%;">
+    <img src="./ss4.png" alt="Pincode Validation Screen" width="100%" height="auto">
+    <p align="center">Pincode Validation Screen</p>
+  </div>
+</div>
 
 ## Contributing
 
