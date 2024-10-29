@@ -105,14 +105,8 @@ Take a quick look at the intuitive UI and various features of Clinikally:
 </div>
 
 
+## Hosted on Expo
 
-## Contributing
-
-We appreciate contributions to the Clinikally project! For detailed instructions on how to contribute, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file.
-
----
-## Hosting
-### Expo 
 
 <a href="https://expo.dev/preview/update?message=hey&updateRuntimeVersion=1.0.0&createdAt=2024-10-29T15%3A17%3A08.487Z&slug=exp&projectId=f388c614-2f49-4f38-9002-5df0c66f47c9&group=ebbb9311-68e4-4584-83ab-dd50b760c1d9">App Link</a>
 
