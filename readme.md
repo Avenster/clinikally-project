@@ -87,18 +87,14 @@ Take a quick look at the intuitive UI and various features of Clinikally:
 <p align="center">Home Screen</p>
 <div style="display: flex; flex-direction:row; justify-content:space-between; width:100%">
 <img src="./ss1.png" alt="Home Screen" width="48%" height="auto">
-<img src="./ss2.png" alt="Product List Screen" width="48%" height="auto">
+<img src="./ss2.png" alt="Product List Screen" width="48%" height="20vh">
 </div>
-<div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-  <div style="flex: 0 0 48%; max-width: 48%;">
-    <img src="./ss3.png" alt="Product Details Screen" width="20%" height="auto">
-    <p align="center">Product Details Screen</p>
-  </div>
-  <div style="flex: 0 0 48%; max-width: 48%;">
-    <img src="./ss4.png" alt="Pincode Validation Screen" width="20%" height="auto">
-    <p align="center">Pincode Validation Screen</p>
-  </div>
+<div style="display: flex; flex-direction:row; justify-content:space-between; width:100%">
+<img src="./ss3.png" alt="Home Screen" width="48%" height="20vh">
+<img src="./ss4.png" alt="Product List Screen" width="48%" height="auto">
 </div>
+
+
 ## Contributing
 
 We appreciate contributions to the Clinikally project! For detailed instructions on how to contribute, please see our [CONTRIBUTING.md](CONTRIBUTING.md) file.
