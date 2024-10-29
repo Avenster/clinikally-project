@@ -85,23 +85,23 @@ Follow these steps to set up and run Clinikally on your device:
 
 Take a quick look at the intuitive UI and various features of Clinikally:
 <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
-  <div style="display:flex; width: 45%; text-align: center; height="auto"">
-    <img src="./ss1.png" alt="Home Screen" width="45%" height="auto">
+  <div style="display:flex; width: 30%; text-align: center; height="auto"">
+    <img src="./ss1.png" alt="Home Screen" width="30%" height="auto">
     <p>Home Screen</p>
   </div>
   <div style=" display:flex; width: 45%; text-align: center; height="auto"">
-    <img src="./ss2.png" alt="Product List Screen" width="45%" height="auto">
+    <img src="./ss2.png" alt="Product List Screen" width="30%" height="auto">
     <p>Product List Screen</p>
   </div>
 </div>
 
 <div style="display: flex; flex-direction: row; justify-content: space-between; width: 100%;">
   <div style="width: 45%; text-align: center; height="auto"">
-    <img src="./ss3.png" alt="Home Screen (Alternate)" width="45%" height="auto">
+    <img src="./ss3.png" alt="Home Screen (Alternate)" width="30%" height="auto">
     <p>Home Screen (Alternate)</p>
   </div>
   <div style=" display:flex; width: 45%; text-align: center; height="auto"">
-    <img src="./ss4.png" alt="Product List Screen (Alternate)" width="45%" height="auto">
+    <img src="./ss4.png" alt="Product List Screen (Alternate)" width="30%" height="auto">
     <p>Product List Screen (Alternate)</p>
   </div>
 </div>
