@@ -1,5 +1,3 @@
-Here's an enhanced README file for the Clinikally project:
-
 ---
 
 # Clinikally
