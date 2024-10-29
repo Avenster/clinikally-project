@@ -39,16 +39,17 @@ Replace `<your_platform>` with either `ios` or `android` depending on the platfo
 Clinikally provides a range of features to streamline the healthcare experience. Here's a glimpse of the application's user interface:
 
 ### Home Screen
-![Appointment Booking Screen](./ss1.png)
+<img src="./ss1.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
+
 
 ### Product List Screen
-![Doctor Consultation Screen](./ss2.png)
+<img src="./ss2.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
 
 ### Product Details Screen
-![Prescription Management Screen](./ss3.png)
+<img src="./ss3.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
 
 ### Pincode testing
-![Symptom Checker Screen](./ss4.png)
+<img src="./ss4.png" alt="Screenshot 1" width="200" height="400" style="margin: 10px;">
 
 ## Getting timer and Date
 
