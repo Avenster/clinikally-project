@@ -92,9 +92,6 @@ Get a glimpse of Clinikally's intuitive UI and feature-rich experience:
 ## Hosted on Expo
 
 Access Clinikally directly via Expo:
-## Hosted on Expo
-
-Access Clinikally directly via Expo:
 [App Link](https://expo.dev/preview/update?message=hey&updateRuntimeVersion=1.0.0&createdAt=2024-10-29T17%3A28%3A39.585Z&slug=exp&projectId=f388c614-2f49-4f38-9002-5df0c66f47c9&group=dc96ff7d-7c6d-4aff-8d3b-ba6d26477771)
 
 
